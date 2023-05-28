@@ -7,7 +7,7 @@ The infrastructure model consists of a high availability project which involves 
 In addition, availability through the load balancer was configured to be used in mariadb, where two master databases are used that replicate their data to a mirror bank where it will be configured to be used by Znuny only for queries, aiming at improving performance with the segregation of roles.
 
 
-#Solutions used:
+SOLUTIONS USED:
 
 Docker - Used to simulate cases of several machines with containers, facilitating the deploy instead of virtualizing several machines
 
