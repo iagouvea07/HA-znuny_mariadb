@@ -23,17 +23,6 @@ services:
     volumes:
       - /home/vagrant/cluster/server_2.conf:/etc/mysql/mariadb.conf.d/50-server.cnf
 
-  mirror:
-    image: mariadb
-    restart: always
-    container_name: mirror
-    networks:
-      - cluster
-    environment:
-      - MYSQL_ROOT_PASSWORD=12345
-    volumes:
-      - /home/vagrant/cluster/mirror.conf:/etc/mysql/mariadb.conf.d/50-server.cnf
-
   znuny_fs:
     image: igouvea/znuny_fs:7
     privileged: true
