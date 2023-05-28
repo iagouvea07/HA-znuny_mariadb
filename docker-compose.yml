@@ -1,0 +1,86 @@
+---
+version: "3.9"
+services:
+  master_1:
+    image: mariadb
+    restart: always
+    container_name: master_1
+    networks:
+      - cluster
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+    volumes:
+      - /home/vagrant/cluster/server_1.conf:/etc/mysql/mariadb.conf.d/50-server.cnf
+  
+  master_2:
+    image: mariadb
+    restart: always
+    container_name: master_2
+    networks:
+      - cluster
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+    volumes:
+      - /home/vagrant/cluster/server_2.conf:/etc/mysql/mariadb.conf.d/50-server.cnf
+
+  mirror:
+    image: mariadb
+    restart: always
+    container_name: mirror
+    networks:
+      - cluster
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+    volumes:
+      - /home/vagrant/cluster/mirror.conf:/etc/mysql/mariadb.conf.d/50-server.cnf
+
+  znuny_fs:
+    image: igouvea/znuny_fs:7
+    privileged: true
+    restart: always
+    container_name: znuny
+    networks:
+      - cluster
+    environment:
+      - container=docker
+    volumes:
+      - znuny_fs:/opt/znuny
+
+  znuny_node_1:
+    image: igouvea/znuny_web:7
+    privileged: true
+    tty: true
+    restart: always
+    container_name: node_1
+    networks:
+      - cluster
+    environment:
+      - container=docker
+    ports:
+      - 8081:80
+    volumes:
+      - znuny_fs:/opt/znuny
+    depends_on:
+      - znuny_fs
+    
+  znuny_node_2:
+    image: igouvea/znuny_web:7
+    privileged: true
+    tty: true
+    restart: always
+    container_name: node_2
+    networks:
+      - cluster
+    environment:
+      - container=docker
+    ports:
+      - 8082:80
+    volumes:
+      - znuny_fs:/opt/znuny
+    depends_on:
+      - znuny_fs
+
+volumes:
+  znuny_fs:
+networks:
+  cluster:
